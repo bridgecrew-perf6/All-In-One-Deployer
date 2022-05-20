@@ -11,8 +11,6 @@
 if [ $(id -u) -eq 0 ]; then
     username=$1
     password=$2
-    echo "Username: ${username}"
-    echo "Password: ${password}"
 	egrep "^${username}" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
 		echo "${username} exists!"

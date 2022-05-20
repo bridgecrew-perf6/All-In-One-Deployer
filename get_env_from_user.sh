@@ -13,7 +13,8 @@ if [ -f .env ]
                 mv .env .env_old
         elif [ "$existing_env" = 3 ]
             then
-                exit 0
+                echo "Using existing .env"
+                exit
         else
             echo "You choice is not exist"
             exit 1
@@ -26,7 +27,7 @@ read -p "Enter remote username : " SERVERUSERNAMES
 read -p "Enter remote password : " SERVERPASSWORDS
 read -p "Enter new deployer name : " REMOTEACCOUNT
 read -p "Enter new deployer password : " REMOTEPASSWORD
-echo -e "Select Database type \n 1. PostgreSQL \n 2. MySQL"
+echo -e "Select Database type: \n 1. PostgreSQL \n 2. MySQL"
 read -p "Enter your choice : " DB_TYPE
 if [ "$DB_TYPE" = 1 ]
     then
@@ -41,6 +42,8 @@ fi
 read -p "Enter database name : " DB_DATABASE
 read -p "Enter database username : " DB_USERNAME
 read -p "Enter database password : " DB_PASSWORD
+echo -e "Select Web Server : \n 1. Nginx \n 2. Apache"
+read -p "Enter your choice : " WEBSERVER
 read -p "Enter deploy path : " DEPLOY_PATH
 read -p "Enter repository url : " GIT_URL
 read -p "Enter repository branch : " BRANCH
@@ -73,15 +76,24 @@ echo "# variable for create new deployer user" >> .env
 echo "REMOTEACCOUNT=$REMOTEACCOUNT" >> .env
 echo "REMOTEPASSWORD=$REMOTEPASSWORD" >> .env
 echo "" >> .env
+echo "# Webserver" >> .env
+if [ "$WEBSERVER" = 1 ]
+    then
+        echo "WEBSERVER=nginx" >> .env
+elif [ "$WEBSERVER" = 2 ]
+    then
+        echo "WEBSERVER=apache" >> .env
+else
+    echo "Please re-start"
+fi
+echo "" >> .env
 echo "# Database" >> .env
 if [ "$DB_TYPE" = 1 ]
     then
         echo "DB_TYPE=PostgreSQL" >> .env
-        DB_TYPE=PostgreSQL
 elif [ "$existing_env" = 2 ]
     then
         echo "DB_TYPE=MySQL" >> .env
-        DB_TYPE=MySQL
 else
     echo "Please re-start"
 fi
@@ -100,10 +112,10 @@ echo "" >> .env
 echo "# Language settings" >> .env
 if [ "$LANGUAGE" = 1 ]
     then
-        echo "PHP=1" >> .env
+        echo "LANGUAGE=PHP" >> .env
 elif [ "$LANGUAGE" = 2 ]
     then
-        echo "PYTHON=1" >> .env
+        echo "LANGUAGE=Python" >> .env
 else
     echo "Please re-start"
 fi
@@ -115,16 +127,16 @@ echo "" >> .env
 echo "# Framework settings" >> .env
 if [ "$FRAMEWORK" = 1 ]
     then
-        echo "Laravel=1" >> .env
+        echo "FRAMEWORK=Laravel" >> .env
 elif [ "$FRAMEWORK" = 2 ]
     then
-        echo "Django=1" >> .env
+        echo "FRAMEWORK=Django" >> .env
 elif [ "$FRAMEWORK" = 3 ]
     then
-        echo "FastAPI=1" >> .env
+        echo "FRAMEWORK=FastAPI" >> .env
 elif [ "$FRAMEWORK" = 4 ]
     then
-        echo "CakePHP=1" >> .env
+        echo "FRAMEWORK=CakePHP" >> .env
 else
     echo "Please re-start"
 fi

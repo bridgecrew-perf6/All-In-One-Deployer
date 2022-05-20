@@ -6,7 +6,7 @@ REMOTEACCOUNT=$3
 
 # delete nginx generated folder
 echo "Delete html folder"
-rm -rf html
+rm -rf /var/www/html
 
 ### Check if a directory does not exist ###
 if [ ! -d "${DEPLOY_PATH}/${APP_NAME}" ]
@@ -16,4 +16,4 @@ then
 fi
 
 echo "Change owner of the folder"
-chown -Rf ${REMOTEACCOUNT}:www-data ${DEPLOY_PATH}/${APP_NAME}
+chown -R ${REMOTEACCOUNT}:www-data ${DEPLOY_PATH}/${APP_NAME}

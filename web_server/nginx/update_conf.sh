@@ -2,11 +2,20 @@
 
 APP_NAME=$1
 HOSTS=$2
-VERSION=$2
+VERSION=$3
+DEPLOY_PATH=$4
+# DEPLOY_PATH=%2Fvar%2Fwww
 
-sed 's/${APP_NAME}/PROJECT/g' /etc/nginx/sites-available/$APP_NAME
-sed 's/${HOSTS}/HOST/g' /etc/nginx/sites-available/$APP_NAME
-sed 's/${VERSION}/PHPVERSION/g' /etc/nginx/sites-available/$APP_NAME
+sudo systemctl stop nginx
 
-rm -rf /etc/nginx/sites-available/*
-ln -s /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enable/$APP_NAME
+sed -i "s/PROJECT/$APP_NAME/g" /etc/nginx/sites-available/$APP_NAME
+sed -i "s/DOMAIN/$HOSTS/g" /etc/nginx/sites-available/$APP_NAME
+sed -i "s/PHPVERSION/$VERSION/g" /etc/nginx/sites-available/$APP_NAME
+sed -i "s|DEPLOY_PATH|$DEPLOY_PATH|g" /etc/nginx/sites-available/$APP_NAME
+
+rm -rf /etc/nginx/sites-enabled/*
+ln -s /etc/nginx/sites-available/$APP_NAME /etc/nginx/sites-enabled/$APP_NAME
+
+lsof -t -i tcp:80 -s tcp:listen | sudo xargs kill
+
+sudo systemctl start nginx
