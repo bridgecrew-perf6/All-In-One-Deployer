@@ -20,7 +20,7 @@ if [ $(id -u) -eq 0 ]; then
 	else
 		pass=$(perl -e 'print crypt($ARGV[0], "password")' ${password})
         echo "$pass"
-		useradd -m -p ${password} ${username}
+		useradd -m -p ${pass} ${username}
 		[ $? -eq 0 ] && echo "User has been added to system!" || echo "Failed to add a user!"
         echo "assign user as Sudoer"
         usermod -aG sudo ${username}
@@ -29,6 +29,6 @@ if [ $(id -u) -eq 0 ]; then
         [ $? -eq 0 ] && echo "Add user to group www-data!" || echo "Failed to add user into group www-data!"
 	fi
 else
-	echo "Sorry, user <username> may not run sudo on <host>."
+	echo "Sorry, user may not run sudo."
 	exit 2
 fi
