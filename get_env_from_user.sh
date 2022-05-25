@@ -63,6 +63,21 @@ fi
 echo -e "Select Project Framework \n 1. Laravel \n 2. Django \n 3. FastAPI \n 2. CakePHP"
 read -p "Enter your choice : " FRAMEWORK
 
+echo -e "Do you want to install NodeJS and npm? \n 1. Yes \n 2. No"
+read -p "Enter your choice : " NODEJS
+if [ "$NODEJS" = 1 ]
+    then
+        echo -e "Select NodeJS version? \n 1. 14 \n 2. 16 \n 3. 17 \n 4. 18"
+        read -p "Enter NodeJS version : " NODEJS_VERSION
+        echo "NODEJS=YES" >> .env
+        echo "NODEJS_VERSION=$NODEJS_VERSION" >> .env
+elif [ "$NODEJS" = 2 ]
+    then
+        echo "NodeJS will not installed"
+else
+    echo "Please re-start"
+fi
+
 # save into .env
 echo "# Project name" >> .env
 echo "APP_NAME=$APP_NAME" >> .env
@@ -137,6 +152,20 @@ elif [ "$FRAMEWORK" = 3 ]
 elif [ "$FRAMEWORK" = 4 ]
     then
         echo "FRAMEWORK=CakePHP" >> .env
+else
+    echo "Please re-start"
+fi
+
+# nodejs
+echo "" >> .env
+echo "# NodeJS settings" >> .env
+if [ "$NODEJS" = 1 ]
+    then
+        echo "NODEJS=YES" >> .env
+        echo "NODEJS_VERSION=$NODEJS_VERSION" >> .env
+elif [ "$NODEJS" = 2 ]
+    then
+        echo "NODEJS=NO" >> .env
 else
     echo "Please re-start"
 fi

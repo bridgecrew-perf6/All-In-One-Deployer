@@ -1,6 +1,7 @@
 #!/bin/bash
 
 path=$1
+nodejs=$2
 
 cd $path
 cp .env.example .env
@@ -15,6 +16,10 @@ chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 
 composer dump-autoload
+php artisan optimize
 
-npm install
-npm run production
+if [ "$nodejs" = "YES" ]
+    then
+        npm install
+        npm run production
+fi

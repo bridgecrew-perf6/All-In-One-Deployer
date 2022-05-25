@@ -20,7 +20,6 @@
 
 # step 1. get config from user
 # ./get_env_from_user.sh
-
 source .env
 
 # # step 2
@@ -76,7 +75,10 @@ source .env
 # fi
 
 # # step 8 install nodejs and npm
-sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < nodejs/14/install.sh $DEPLOY_PATH $APP_NAME $REMOTEACCOUNT
+if [ "$NODEJS" = "YES" ]
+    then
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < nodejs/$NODEJS_VERSION/install.sh $DEPLOY_PATH $APP_NAME $REMOTEACCOUNT
+fi
 
 
 # # step 7 create desired folder
@@ -86,7 +88,7 @@ sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < nodejs/14
 # sshpass -p $REMOTEPASSWORD ssh -l $REMOTEACCOUNT $HOSTS "bash -s" < git/clone_project.sh $GIT_URL $DEPLOY_PATH $APP_NAME $BRANCH
 
 # step 8 install project dependencies
-sshpass -p $REMOTEPASSWORD ssh -l $REMOTEACCOUNT $HOSTS "bash -s" < project_dep/laravel/install.sh "${DEPLOY_PATH}/${APP_NAME}"
+sshpass -p $REMOTEPASSWORD ssh -l $REMOTEACCOUNT $HOSTS "bash -s" < project_dep/laravel/install.sh "${DEPLOY_PATH}/${APP_NAME}" $NODEJS
 
 # SCRIPT="pwd; ls -al"
 # for HOSTNAME in ${HOSTS} ; do
