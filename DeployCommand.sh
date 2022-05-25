@@ -19,60 +19,66 @@
 
 
 # step 1. get config from user
-# ./get_env_from_user.sh
+./get_env_from_user.sh
 source .env
 
-# # step 2
-# echo "Create user deployer"
-# sshpass -p $SERVERPASSWORDS ssh -o StrictHostKeyChecking=no -l $SERVERUSERNAMES $HOSTS "bash -s" < ./user/create.sh $REMOTEACCOUNT $REMOTEPASSWORD
+# step 2
+echo "Create user deployer"
+sshpass -p $SERVERPASSWORDS ssh -o StrictHostKeyChecking=no -l $SERVERUSERNAMES $HOSTS "bash -s" < ./user/create.sh $REMOTEACCOUNT $REMOTEPASSWORD
 
-# # step 3.1 upgrade Ubuntu packages
-# echo "Update server"
-# sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < installDependencies.sh
+# step 3.1 upgrade Ubuntu packages
+echo "Update server"
+sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < installDependencies.sh
 
-# # step 3.2 Install Selected Language packages
-# echo "Install project language"
-# if [ "$LANGUAGE" = "PHP" ]
-#     then
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < php/$VERSION/install.sh
-# elif [ "$LANGUAGE" = "Python" ]
-#     then
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < python/$VERSION/install.sh
-# fi
+# step 3.2 Install Selected Language packages
+echo "Install project language"
+if [ "$LANGUAGE" = "PHP" ]
+    then
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < php/$VERSION/install.sh
+elif [ "$LANGUAGE" = "Python" ]
+    then
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < python/$VERSION/install.sh
+fi
 
-# # step 4 Install Database
-# echo "Install Database"
-# if [ "$DB_TYPE" = "PostgreSQL" ]
-#     then
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < database/postgresql/install.sh $DB_USERNAME $DB_PASSWORD $DB_DATABASE
-# elif [ "$DB_TYPE" = "MySQL" ]
-#     then
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < database/mysql/install.sh $DB_USERNAME $REMOTEACCOUNT $DB_DATABASE
-# fi
+# step 4 Install Database
+echo "Install Database"
+if [ "$DB_TYPE" = "PostgreSQL" ]
+    then
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < database/postgresql/install.sh $DB_USERNAME $DB_PASSWORD $DB_DATABASE
+elif [ "$DB_TYPE" = "MySQL" ]
+    then
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < database/mysql/install.sh $DB_USERNAME $REMOTEACCOUNT $DB_DATABASE
+fi
 
-# # step 5 Install WebServer
-# if [ "$WEBSERVER" = "nginx" ]
-#     then
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/nginx/install.sh
-#         # step 5.1 delete existing nginx conf
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "rm /etc/nginx/sites-available/*"
-#         # step 5.2 copy nginx conf
-#         sshpass -p ${SERVERPASSWORDS} scp "web_server/nginx/conf/laravel" ${SERVERUSERNAMES}@${HOSTS}:/etc/nginx/sites-available/${APP_NAME}
-#         # step 5.3 update nginx conf
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/nginx/update_conf.sh $APP_NAME $HOSTS $VERSION $DEPLOY_PATH
-# elif [ "$WEBSERVER" = "apache" ]
-#     then
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < python/$VERSION/install.sh
-# fi
+# step 5 Install WebServer
+if [ "$WEBSERVER" = "nginx" ]
+    then
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/nginx/install.sh $LANGUAGE $VERSION
+        # step 5.1 delete existing nginx conf
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "rm /etc/nginx/sites-available/*"
+        # step 5.2 copy nginx conf
+        sshpass -p ${SERVERPASSWORDS} scp "web_server/nginx/conf/laravel" ${SERVERUSERNAMES}@${HOSTS}:/etc/nginx/sites-available/${APP_NAME}
+        # step 5.3 update nginx conf
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/nginx/update_conf.sh $APP_NAME $HOSTS $VERSION $DEPLOY_PATH
+elif [ "$WEBSERVER" = "apache" ]
+    then
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/apache/install.sh $LANGUAGE $VERSION
+        # step 5.1 delete existing nginx conf
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "rm /etc/apache2/sites-available/*"
+        # step 5.2 copy nginx conf
+        sshpass -p ${SERVERPASSWORDS} scp "web_server/apache/conf/laravel" ${SERVERUSERNAMES}@${HOSTS}:/etc/apache/sites-available/${APP_NAME}
+        # step 5.3 update nginx conf
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/apache/update_conf.sh $APP_NAME $HOSTS $VERSION $DEPLOY_PATH
+fi
 
-# # step 6 Install framework
-# if [ "$FRAMEWORK" = "Laravel" ]
-#     then
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < framework/Laravel/install.sh
-# elif [ "$FRAMEWORK" = "Django" ]
-#     then
-#         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < framework/Django/install.sh
-# fi
+# step 6 Install framework
+if [ "$FRAMEWORK" = "Laravel" ]
+    then
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < framework/Laravel/install.sh
+elif [ "$FRAMEWORK" = "Django" ]
+    then
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < framework/Django/install.sh
+fi
 
 # # step 8 install nodejs and npm
 if [ "$NODEJS" = "YES" ]
@@ -81,11 +87,11 @@ if [ "$NODEJS" = "YES" ]
 fi
 
 
-# # step 7 create desired folder
-# sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < git/create_folder.sh $DEPLOY_PATH $APP_NAME $REMOTEACCOUNT
+# step 7 create desired folder
+sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < git/create_folder.sh $DEPLOY_PATH $APP_NAME $REMOTEACCOUNT
 
-# # step 7.1 clone from git repo
-# sshpass -p $REMOTEPASSWORD ssh -l $REMOTEACCOUNT $HOSTS "bash -s" < git/clone_project.sh $GIT_URL $DEPLOY_PATH $APP_NAME $BRANCH
+# step 7.1 clone from git repo
+sshpass -p $REMOTEPASSWORD ssh -l $REMOTEACCOUNT $HOSTS "bash -s" < git/clone_project.sh $GIT_URL $DEPLOY_PATH $APP_NAME $BRANCH
 
 # step 8 install project dependencies
 sshpass -p $REMOTEPASSWORD ssh -l $REMOTEACCOUNT $HOSTS "bash -s" < project_dep/laravel/install.sh "${DEPLOY_PATH}/${APP_NAME}" $NODEJS
