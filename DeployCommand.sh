@@ -25,7 +25,7 @@ source .env
 # step 2
 echo "Create user deployer"
 sshpass -p $SERVERPASSWORDS ssh -o StrictHostKeyChecking=no -l $SERVERUSERNAMES $HOSTS "bash -s" < ./user/create.sh $REMOTEACCOUNT $REMOTEPASSWORD
-
+exit
 # step 3.1 upgrade Ubuntu packages
 echo "Update server"
 sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < installDependencies.sh
