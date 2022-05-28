@@ -8,11 +8,10 @@
 # read -p "Enter username : " username
 # read -s -p "Enter password : " password
 # -------------------------------------------------------------------------
+username=$1
+password=$2
+whoami
 if [ $(id -u) -eq 0 ]; then
-    username=$1
-    password=$2
-    echo "Username: ${username}"
-    echo "Password: ${password}"
 	egrep "^${username}" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
 		echo "The user ${username} exists!"

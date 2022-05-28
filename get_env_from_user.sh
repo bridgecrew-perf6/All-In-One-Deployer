@@ -14,7 +14,7 @@ if [ -f .env ]
         elif [ "$existing_env" = 3 ]
             then
                 echo "Using existing .env"
-                exit
+                exit 1
         else
             echo "You choice is not exist"
             exit 1

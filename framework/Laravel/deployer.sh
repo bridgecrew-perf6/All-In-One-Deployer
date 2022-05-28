@@ -1,40 +1,5 @@
 #!/bin/bash
 
-#  ----------------------------------------------------------------
-# 1. read environment variables from .env and export to remote server
-# 2. create deployer user
-# 3. install application environment dependencies
-# 4. install and config database
-# 5. install web server
-# 6. install framework
-# 7. install nodejs and npm
-# 8. clone project from repository
-# 9. install project dependencies
-#  ----------------------------------------------------------------
-
-# TODO:
-# ----------------------------------------------------------------
-# 1. auto add ssh key from server into git repo
-# ----------------------------------------------------------------
-
-
-# step 1. get config from user
-./get_env_from_user.sh
-
-source .env
-
-# Checked selected framework
-if [ "$FRAMEWORK" = "Laravel" ]
-    then
-        ./framework/Laravel/deployer.sh
-elif [ "$FRAMEWORK" = "Django" ]
-    then
-        ./framework/Django/deployer.sh
-fi
-
-echo $FRAMEWORK
-exit 2
-
 source .env
 
 # step 2
@@ -68,32 +33,26 @@ fi
 # step 5 Install WebServer
 if [ "$WEBSERVER" = "nginx" ]
     then
-        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/nginx/install.sh $LANGUAGE $VERSION
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/Laravel/nginx/install.sh $LANGUAGE $VERSION
         # step 5.1 delete existing nginx conf
         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "rm /etc/nginx/sites-available/*"
         # step 5.2 copy nginx conf
-        sshpass -p ${SERVERPASSWORDS} scp "web_server/nginx/conf/laravel" ${SERVERUSERNAMES}@${HOSTS}:/etc/nginx/sites-available/${APP_NAME}
+        sshpass -p ${SERVERPASSWORDS} scp "web_server/Laravel/nginx/conf/laravel" ${SERVERUSERNAMES}@${HOSTS}:/etc/nginx/sites-available/${APP_NAME}
         # step 5.3 update nginx conf
-        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/nginx/update_conf.sh $APP_NAME $HOSTS $VERSION $DEPLOY_PATH
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/Laravel/nginx/update_conf.sh $APP_NAME $HOSTS $VERSION $DEPLOY_PATH
 elif [ "$WEBSERVER" = "apache" ]
     then
-        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/apache/install.sh $LANGUAGE $VERSION
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/Laravel/apache/install.sh $LANGUAGE $VERSION
         # step 5.1 delete existing nginx conf
         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "rm /etc/apache2/sites-available/*"
         # step 5.2 copy nginx conf
-        sshpass -p ${SERVERPASSWORDS} scp "web_server/apache/conf/laravel" ${SERVERUSERNAMES}@${HOSTS}:/etc/apache/sites-available/${APP_NAME}
+        sshpass -p ${SERVERPASSWORDS} scp "web_server/Laravel/apache/conf/laravel" ${SERVERUSERNAMES}@${HOSTS}:/etc/apache/sites-available/${APP_NAME}
         # step 5.3 update nginx conf
-        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/apache/update_conf.sh $APP_NAME $HOSTS $VERSION $DEPLOY_PATH
+        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < web_server/Laravel/apache/update_conf.sh $APP_NAME $HOSTS $VERSION $DEPLOY_PATH
 fi
 
 # step 6 Install framework
-if [ "$FRAMEWORK" = "Laravel" ]
-    then
-        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < framework/Laravel/install.sh
-elif [ "$FRAMEWORK" = "Django" ]
-    then
-        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < framework/Django/install.sh
-fi
+sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < framework/Laravel/install.sh
 
 # # step 8 install nodejs and npm
 if [ "$NODEJS" = "YES" ]
