@@ -10,13 +10,17 @@
 # -------------------------------------------------------------------------
 username=$1
 password=$2
+
+echo "whoami"
 whoami
+
 if [ $(id -u) -eq 0 ]; then
 	egrep "^${username}" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
 		echo "The user ${username} exists!"
 		exit 1
 	else
+		echo "Creating User"
 		pass=$(perl -e 'print crypt($ARGV[0], "password")' ${password})
         echo "$pass"
 		useradd -m -p ${pass} ${username}

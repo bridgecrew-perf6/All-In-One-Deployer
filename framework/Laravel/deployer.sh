@@ -8,7 +8,7 @@ sshpass -p $SERVERPASSWORDS ssh -o StrictHostKeyChecking=no -l $SERVERUSERNAMES 
 exit
 # step 3.1 upgrade Ubuntu packages
 echo "Update server"
-sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < installDependencies.sh
+sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < ./ubuntu/installDependencies.sh
 
 # step 3.2 Install Selected Language packages
 echo "Install project language"
@@ -17,7 +17,8 @@ if [ "$LANGUAGE" = "PHP" ]
         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < php/$VERSION/install.sh
 elif [ "$LANGUAGE" = "Python" ]
     then
-        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < python/$VERSION/install.sh
+        echo "Laravel Framework does not with Python. Please update .env"
+        exit
 fi
 
 # step 4 Install Database

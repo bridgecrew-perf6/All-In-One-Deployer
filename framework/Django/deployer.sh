@@ -5,16 +5,17 @@ source .env
 # step 1
 echo "Create user deployer"
 sshpass -p $SERVERPASSWORDS ssh -o StrictHostKeyChecking=no -l $SERVERUSERNAMES $HOSTS "bash -s" < ./user/create.sh $REMOTEACCOUNT $REMOTEPASSWORD
-exit
+
 # step 2 upgrade Ubuntu packages
 echo "Update server"
-sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < installDependencies.sh
+sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < ./ubuntu/installDependencies.sh
 
 # step 3 Install Selected Language and packages
 echo "Install project language"
 if [ "$LANGUAGE" = "PHP" ]
     then
-        sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < php/$VERSION/install.sh
+        echo "Django Framework does not with PHP. Please update .env"
+        exit
 elif [ "$LANGUAGE" = "Python" ]
     then
         sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < python/$VERSION/install.sh
