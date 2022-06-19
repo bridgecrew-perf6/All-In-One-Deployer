@@ -28,12 +28,16 @@ fi
 
 if [[ ! -f  ~/.ssh/id_rsa ]]; then
     echo "Create keygen"
-    ssh-keygen -t rsa -b 2048 -q -P ""
+    # ssh-keygen -t rsa -b 2048 -q -P ""
+    ssh-keygen -t rsa -b 2048 -P "" -f ~/.ssh/id_rsa
 fi
 
+sleep 5
+echo "----------------------------------------------------------------"
 cat ~/.ssh/id_rsa.pub
-echo "Copy id_rsa.pub into your git repository. Script will wait for 80 seconds"
-sleep 80
+echo "Copy id_rsa.pub into your git repository. Script will wait for 60 seconds"
+echo "----------------------------------------------------------------"
+sleep 60
 
 # clone project into folder
 git clone $GIT_URL ${DEPLOY_PATH}/${APP_NAME} -b $BRANCH

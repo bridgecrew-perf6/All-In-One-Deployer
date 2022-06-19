@@ -14,3 +14,5 @@ CAVEATS:
 2. If you are using apache2, you are advised to add ppa:ondrej/apache2
 3. If you are using nginx, you are advised to add ppa:ondrej/nginx-mainline
    or ppa:ondrej/nginx
+
+https://computingforgeeks.com/how-to-install-php-on-ubuntu-linux-system/

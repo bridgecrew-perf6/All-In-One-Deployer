@@ -6,13 +6,15 @@ nodejs=$2
 cd $path
 
 virtualenv $path/environ
-source $path/bin/activate
+source $path/environ/bin/activate
 pip install gunicorn
-pip install -r requirement.txt
+pip install -r requirements.txt
 
-source $path/manage.py makemigrations
-source $path/manage.py migrate
-source $path/manage.py collectstatic
+$path/manage.py makemigrations
+$path/manage.py migrate
+$path/manage.py collectstatic
+
+# to do: create superuser
 
 deactivate
 

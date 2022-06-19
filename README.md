@@ -4,8 +4,8 @@ Tool for Deploy your awesome project written in Shell Script.
 
 Aim to support most Frameworks and Languages.
 
-1. Laravel - Nginx - Done
-2. Django
+1. Laravel - Nginx/Apache - Done
+2. Django - Nginx - In Progress
 3. FastApi
 4. Lumen
 and more..

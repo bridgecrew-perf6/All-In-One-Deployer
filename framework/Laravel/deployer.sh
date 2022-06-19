@@ -5,7 +5,7 @@ source .env
 # step 2
 echo "Create user deployer"
 sshpass -p $SERVERPASSWORDS ssh -o StrictHostKeyChecking=no -l $SERVERUSERNAMES $HOSTS "bash -s" < ./user/create.sh $REMOTEACCOUNT $REMOTEPASSWORD
-exit
+
 # step 3.1 upgrade Ubuntu packages
 echo "Update server"
 sshpass -p $SERVERPASSWORDS ssh -l $SERVERUSERNAMES $HOSTS "bash -s" < ./ubuntu/installDependencies.sh
@@ -70,12 +70,3 @@ sshpass -p $REMOTEPASSWORD ssh -l $REMOTEACCOUNT $HOSTS "bash -s" < git/clone_pr
 
 # step 8 install project dependencies
 sshpass -p $REMOTEPASSWORD ssh -l $REMOTEACCOUNT $HOSTS "bash -s" < project_dep/laravel/install.sh "${DEPLOY_PATH}/${APP_NAME}" $NODEJS
-
-# SCRIPT="pwd; ls -al"
-# for HOSTNAME in ${HOSTS} ; do
-#     echo ${HOSTNAME[i]}
-#     # create deployer account
-#     # sshpass -p ${SERVERPASSWORDS[i]} ssh -l ${SERVERUSERNAMES[i]} ${HOSTNAME[i]} "bash -s" < addUser.sh ${REMOTEACCOUNT} ${REMOTEPASSWORD}
-#     # sshpass -p ${SERVERPASSWORDS[i]} ssh -l ${SERVERUSERNAMES[i]} ${HOSTNAME[i]} "bash -s" < installDependencies.sh ${REMOTEACCOUNT} ${REMOTEPASSWORD} ${project} ${dbuser} ${dbpass} ${dbname}
-#     # sshpass -p ${SERVERPASSWORDS[i]} ssh -l ${SERVERUSERNAMES[i]} ${HOSTNAME[i]} "${SCRIPT}"
-# done

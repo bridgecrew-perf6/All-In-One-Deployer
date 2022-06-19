@@ -8,6 +8,6 @@ sudo apt update -y
 if [ -e /var/run/nginx.pid ]; then
     echo "Nginx is installed and running";
 else
-    sudo apt install nginx
+    sudo apt install nginx -y
     sudo systemctl enable nginx
 fi
